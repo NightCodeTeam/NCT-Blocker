@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+redis
+starlette
+
+pydantic
+pydantic-settings
+
+asyncpg
+sqlalchemy
+aiosqlite
+aiohttp
+psutil
+
+apscheduler
