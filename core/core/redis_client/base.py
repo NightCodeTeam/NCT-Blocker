@@ -78,7 +78,7 @@ class RedisClient:
 
     async def set_json(self, key: str, data: dict, debug: bool = False):
         if debug:
-            logging.debug(f'set_json: {key}')
+            print(f'set_json: {key}')
         try:
             await self.__client.set(
                 self.__insert_prefix_key(key),
@@ -95,7 +95,7 @@ class RedisClient:
         debug: bool = False
     ) -> dict | None:
         if debug:
-            logging.debug(f'get_json: {key}')
+            print(f'get_json: {key}')
         key = self.__insert_prefix_key(key, spec_app_prefix=spec_app_prefix)
         try:
             ans = await self.__client.get(key)

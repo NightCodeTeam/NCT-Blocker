@@ -7,6 +7,9 @@ from pydantic import BaseModel
 
 from src.depends import DBDep
 
+from core.redis_client import RedisDep
+from core.fast_decorators import cache, rate_limiter
+
 
 class StatusResponse(BaseModel):
     ok: bool
@@ -21,10 +24,12 @@ process = psutil.Process(os.getpid())
 
 
 @utils_router_v1.get("/status", response_model=StatusResponse)
-async def status(db: DBDep):
+@cache('utils_status', expire=5*60)
+@rate_limiter(max_requests=10, time_delta=60)
+async def status(db: DBDep, redis: RedisDep):
     """
     Возвращает статус загруженности приложения.
-    - ok - загрузка успешна
+    - ok - Флаг работает ли приложение (если ответа нет и так понятно что оно выключено)
     - cpu_usage - использование CPU в процентах (может быть более 100% если используется несколько ядер)
     - memory_usage - использование памяти в мегабайтах
     - disk_usage - использование диска в процентах
