@@ -2,12 +2,6 @@ version = 1
 revision = 3
 requires-python = ">=3.14"
 
-[manifest]
-members = [
-    "blocker-service",
-    "core",
-]
-
 [[package]]
 name = "aiohappyeyeballs"
 version = "2.6.1"
@@ -191,7 +185,7 @@ requires-dist = [
     { name = "aiosqlite", specifier = ">=0.22.1" },
     { name = "apscheduler", specifier = ">=3.11.2" },
     { name = "asyncpg", specifier = ">=0.31.0" },
-    { name = "core", editable = "core" },
+    { name = "core", git = "https://github.com/MaxBro12/core.git?rev=master" },
     { name = "fastapi", specifier = ">=0.128.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "psutil", specifier = ">=7.2.2" },
@@ -236,40 +230,16 @@ wheels = [
 [[package]]
 name = "core"
 version = "0.1.0"
-source = { editable = "core" }
+source = { git = "https://github.com/MaxBro12/core.git?rev=master#0ae48a34b26276a887222ceac2010fdeba8994a1" }
 dependencies = [
     { name = "aiohttp" },
     { name = "fastapi" },
-    { name = "httpx" },
     { name = "psutil" },
     { name = "pydantic" },
     { name = "redis" },
     { name = "sqlalchemy" },
     { name = "uvicorn" },
 ]
-
-[package.optional-dependencies]
-test = [
-    { name = "aiosqlite" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "aiohttp", specifier = ">=3.13.3" },
-    { name = "aiosqlite", marker = "extra == 'test'" },
-    { name = "fastapi" },
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "psutil", specifier = ">=7.2.2" },
-    { name = "pydantic" },
-    { name = "pytest", marker = "extra == 'test'" },
-    { name = "pytest-asyncio", marker = "extra == 'test'" },
-    { name = "redis", specifier = ">=7.1.0" },
-    { name = "sqlalchemy", specifier = ">=2.0.46" },
-    { name = "uvicorn", specifier = ">=0.40.0" },
-]
-provides-extras = ["test"]
 
 [[package]]
 name = "fastapi"

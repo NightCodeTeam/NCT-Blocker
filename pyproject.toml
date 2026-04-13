@@ -27,4 +27,4 @@ members = [
 ]
 
 [tool.uv.sources]
-core = { workspace = true }
+core = { git = "https://github.com/MaxBro12/core.git", rev = "master" }
