@@ -8,11 +8,11 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from fastapi import Request
 
 from core.redis_client import get_redis
-from app.database.database import Base
-from app.database.repo import DataBase
-from app.depends.db import get_db
-from app.__main__ import app
-from app.settings import settings
+from src.database.database import Base
+from src.database.repo import DataBase
+from src.depends.db import get_db
+from src.__main__ import app
+from src.settings import settings
 
 
 engine = create_async_engine(

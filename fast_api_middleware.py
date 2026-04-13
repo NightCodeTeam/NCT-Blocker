@@ -6,7 +6,7 @@ import redis.asyncio as redis
 from core.requests_makers import HttpMakerAsync
 from core.redis_client import RedisClient
 
-from app.settings import settings
+from src.settings import settings
 # Файл настроек с url сервиса, ключа приложения к redis и ключа приложения
 
 # Сервис связи с API блокировки

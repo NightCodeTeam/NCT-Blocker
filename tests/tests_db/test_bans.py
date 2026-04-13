@@ -1,11 +1,9 @@
 import pytest
-from datetime import datetime, timedelta, timezone
-
-from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import datetime, timedelta
 
 from core.spec_time import time_with_shift
-from app.database.repo import DataBase
-from app.database.models import Ban
+from src.database.repo import DataBase
+from src.database.models import Ban
 
 
 async def test_add(test_db: DataBase):
@@ -22,8 +20,7 @@ async def test_add(test_db: DataBase):
     res = await test_db.bans.by_ip('123.4.5.6')
     assert res is not None
     assert res.reason == 'test'
-    res.date_unban.replace(tzinfo=timezone.utc)
-    assert res.date_unban.replace(tzinfo=timezone.utc) >= time_with_shift(6)
+    assert res.date_unban >= time_with_shift(6)
     assert res.permanent == True
     assert res.white == False
 
