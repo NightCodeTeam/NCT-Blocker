@@ -1,36 +1,34 @@
-from datetime import datetime, timedelta, timezone
+from typing import override
 
-from sqlalchemy import func, select
+from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete, and_
 
-from core.sql_repository import Repository, SessionNotFound
+from core.sql_repository import RepositoryObj, SessionNotFound
 from core.spec_time import time_with_shift, get_current_time
 from src.database.models.ban import Ban
 
 from src.settings import settings
 
 
-class BanRepo(Repository):
+class BanRepo(RepositoryObj):
     def __init__(self, session: AsyncSession):
         super().__init__(Ban, session=session)
 
     async def exists(self, ip_address: str, white: bool = False) -> bool:
-        return await self._exists(_filter=f"{self.table}.ip='{ip_address}' AND {self.table}.white={white}")
+        return await self._exists(filter_=and_(Ban.ip == ip_address, Ban.white == white))
 
+    @override
     async def count(self, white: bool = False) -> int:
         try:
-            return int((await self.session.execute(select(func.count()).select_from(self.model).where(
-                Ban.white == white
-            ))).scalar())
+            return await super().count(Ban.white == white)
         except AttributeError as e:
             raise SessionNotFound()
 
     async def by_ip(self, ip_address: str) -> Ban | None:
-        return await self.get(_filter=f"{self.table}.ip='{ip_address}'")
+        return await self.get(filter_=Ban.ip == ip_address)
 
-    @Repository.sql_protected
     async def new(
         self,
         ip: str,
