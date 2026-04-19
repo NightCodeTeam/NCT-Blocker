@@ -2,7 +2,7 @@ fastapi
 uvicorn
 redis
 starlette
-./core
+git+https://github.com/MaxBro12/core.git#egg=core
 
 pydantic
 pydantic-settings

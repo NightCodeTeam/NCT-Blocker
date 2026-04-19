@@ -20,6 +20,13 @@ dependencies = [
     "sqlalchemy>=2.0.46",
     "uvicorn>=0.40.0",
 ]
+[project.optional-dependencies]
+tests = [
+    "pytest",
+    "pytest-asyncio",
+    "aiosqlite",
+    "httpx",
+]
 
 [tool.uv.workspace]
 members = [
