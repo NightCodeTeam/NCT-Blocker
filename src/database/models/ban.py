@@ -23,3 +23,9 @@ class Ban(Base):
     date_unban: Mapped[datetime] = mapped_column(DateTime, default=get_current_time())
     permanent: Mapped[bool] = mapped_column(default=False)
     white: Mapped[bool] = mapped_column(default=False)
+
+    def __repr__(self) -> str:
+        return f"<Ban(ip={self.ip}, reason={self.reason}, date_unban={self.date_unban}, permanent={self.permanent}, white={self.white})>"
+
+    def __str__(self) -> str:
+        return f"Ban {self.ip}, permanent={self.permanent}, white={self.white})"

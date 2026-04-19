@@ -1,16 +1,24 @@
 from fastapi import APIRouter, HTTPException, status
 
-from .models import Ok, Bans, NewBan
+from .models import Bans, NewBan
 from src.depends import DBDep
 from core.fast_decorators import cache
 from core.redis_client import RedisDep
 from core.fast_depends import PaginationParams
+from core.pydantic_misc_models import Ok, Detail
 
 
 bans_router_v1 = APIRouter(prefix='/v1/bans', tags=['bans'])
 
 
-@bans_router_v1.post('', response_model=Ok)
+@bans_router_v1.post(
+    '',
+    response_model=Ok | Detail,
+    responses={
+        200: {'model': Ok},
+        400: {'description': 'Invalid IP address or IP address already in ban', 'model': Detail},
+    },
+)
 async def add_ban(db: DBDep, data: NewBan, redis: RedisDep):
     """
     Добавить бан или белый список
@@ -54,7 +62,10 @@ async def bans(db: DBDep, pagination: PaginationParams):
     return {'bans': await db.bans.all()}
 
 
-@bans_router_v1.get('/{ip_address}', response_model=Ok)
+@bans_router_v1.get('/{ip_address}', response_model=Ok | Detail, responses={
+    200: {'model': Ok},
+    400: {'description': 'Invalid IP address', 'model': Detail},
+})
 @cache(key='in_ban', expire=21600)
 async def in_ban(ip_address: str, db: DBDep, redis: RedisDep):
     """Проверка наличия IP адреса в банах. Эндпойнт кэшируется на 6 часов"""

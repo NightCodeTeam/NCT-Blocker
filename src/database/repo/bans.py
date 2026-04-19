@@ -13,20 +13,32 @@ from src.settings import settings
 
 
 class BanRepo(RepositoryObj):
+    """
+    Репозиторий для работы с моделью Ban.
+    """
     def __init__(self, session: AsyncSession):
         super().__init__(Ban, session=session)
 
     async def exists(self, ip_address: str, white: bool = False) -> bool:
+        """
+        Проверяет наличие ip адреса в бане/белом списке.
+        """
         return await self._exists(filter_=and_(Ban.ip == ip_address, Ban.white == white))
 
     @override
     async def count(self, white: bool = False) -> int:
+        """
+        Возвращает количество банов/белых адресов.
+        """
         try:
             return await super().count(Ban.white == white)
         except AttributeError as e:
             raise SessionNotFound()
 
     async def by_ip(self, ip_address: str) -> Ban | None:
+        """
+        Возвращает модель Ban по IP или None если не найдено.
+        """
         return await self.get(filter_=Ban.ip == ip_address)
 
     async def new(
@@ -38,6 +50,14 @@ class BanRepo(RepositoryObj):
         white: bool = False,
         commit: bool = False
     ) -> bool:
+        """
+        Добавляет новую модель Ban в базу данных.
+            - ip
+            - reason - причина бана
+            - duration_days - количество дней до разбана
+            - permanent - является ли бан навсегда
+            - white - является ли адрес белым
+        """
         try:
             if len(ip.split('.')) != 4:
                 return False
@@ -52,12 +72,18 @@ class BanRepo(RepositoryObj):
             return False
 
     async def delete_by_ip(self, ip_address: str, commit: bool = False) -> bool:
+        """
+        Удаляет модель Ban по IP.
+        """
         data = await self.by_ip(ip_address)
         if data:
             return await self.delete(obj=data, commit=commit)
         return False
 
     async def pagination(self, skip: int | None = None, limit: int | None = None) -> tuple[Ban, ...]:
+        """
+        Возвращает пагинацию моделей Ban.
+        """
         return await super()._pagination(
             skip=skip,
             limit=limit,
@@ -65,6 +91,9 @@ class BanRepo(RepositoryObj):
         )
 
     async def del_old_bans(self):
+        """
+        Удаляет старые баны (непостоянные, не белые, у которых истек срок разбана).
+        """
         await self.session.execute(
             delete(Ban).where(
                 and_(

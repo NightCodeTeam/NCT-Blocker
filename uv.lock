@@ -230,7 +230,7 @@ wheels = [
 [[package]]
 name = "core"
 version = "0.1.2b0"
-source = { git = "https://github.com/MaxBro12/core.git?rev=master#578918f93b3615934e284e0a80c419a78481d5e3" }
+source = { git = "https://github.com/MaxBro12/core.git?rev=master#7543d6b2b23a7583df6e35d9622e10cd19224479" }
 dependencies = [
     { name = "aiohttp" },
     { name = "fastapi" },
