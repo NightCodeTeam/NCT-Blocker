@@ -79,3 +79,13 @@ async def test_del_old_bans(test_db: DataBase):
     assert await test_db.bans.exists('123.4.5.11') == False
     assert await test_db.bans.exists('123.4.5.12') == True
     assert await test_db.bans.exists('123.4.5.13', white=True) == True
+
+
+async def test_count(test_db: DataBase):
+    await test_db.bans.clear_table()
+    await test_db.bans.new('123.4.5.6', 'test', 3, False, False)
+    await test_db.bans.new('123.4.5.67', 'test', 3, False, True)
+    await test_db.bans.new('123.4.5.68', 'test', 3, False, True)
+    await test_db.flush()
+    assert await test_db.bans.count() == 1
+    assert await test_db.bans.count(True) == 2

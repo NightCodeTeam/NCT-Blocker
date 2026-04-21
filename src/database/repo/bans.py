@@ -1,6 +1,6 @@
 from typing import override
 
-from sqlalchemy import and_
+from sqlalchemy import and_, select, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import delete, and_
@@ -31,8 +31,10 @@ class BanRepo(RepositoryObj):
         Возвращает количество банов/белых адресов.
         """
         try:
-            return await super().count(Ban.white == white)
-        except AttributeError as e:
+            return (await self.session.execute(
+                select(func.count()).select_from(self.model).where(Ban.white == white))
+            ).scalar() or 0
+        except AttributeError:
             raise SessionNotFound()
 
     async def by_ip(self, ip_address: str) -> Ban | None:
