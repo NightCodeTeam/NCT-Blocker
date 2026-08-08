@@ -39,7 +39,7 @@ async def status(db: DBDep, redis: RedisDep):
         "ok": True,
         "cpu_usage": round(process.cpu_percent(), 1),
         "memory_usage": round(process.memory_info().rss / 1024 / 1024, 1),
-        "disk_usage": round(psutil.disk_usage('/').percent, 1),
+        "disk_usage": round(psutil.disk_usage(os.getcwd()).percent, 1),
         "adt_data": {
             'blocked': await db.bans.count(white=False),
             'white': await db.bans.count(white=True)
