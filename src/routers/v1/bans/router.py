@@ -1,11 +1,11 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Request
 
 from .models import Bans, NewBan
 from src.depends import DBDep
-from core.fast_decorators import cache
-from core.redis_client import RedisDep
+from core.fast_decorators import cache_path
 from core.fast_depends import PaginationParams
 from core.pydantic_misc_models import Ok, Detail
+from core.redis_client import RedisDep
 
 
 bans_router_v1 = APIRouter(prefix='/v1/bans', tags=['bans'])
@@ -66,8 +66,8 @@ async def bans(db: DBDep, pagination: PaginationParams):
     200: {'model': Ok},
     400: {'description': 'Invalid IP address', 'model': Detail},
 })
-@cache(key='in_ban', expire=21600)
-async def in_ban(ip_address: str, db: DBDep, redis: RedisDep):
+@cache_path(expire=21600)
+async def in_ban(request: Request, ip_address: str, db: DBDep):
     """Проверка наличия IP адреса в банах. Эндпойнт кэшируется на 6 часов"""
     # Проверка на валидность IP адреса
     if len(ip_address.split('.')) != 4:
