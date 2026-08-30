@@ -6,13 +6,11 @@ from pydantic import BaseModel
 class Ban(BaseModel):
     """
     Модель бана или белого адреса:
-        - ip
         - reason - причина бана или записи в белый список
         - date_unban - дата снятия бана
         - permanent - является ли бан вечным
         - white - является ли запись в белый список
     """
-    ip: str
     reason: str
     date_unban: datetime
     permanent: bool

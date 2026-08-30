@@ -51,7 +51,7 @@ class BanRepo(RepositoryObj):
         permanent: bool = False,
         white: bool = False,
         commit: bool = False
-    ) -> bool:
+    ) -> Ban | None:
         """
         Добавляет новую модель Ban в базу данных.
             - ip
@@ -62,8 +62,8 @@ class BanRepo(RepositoryObj):
         """
         try:
             if len(ip.split('.')) != 4:
-                return False
-            return await self.add(Ban(
+                return None
+            return await self._add(Ban(
                 ip=ip,
                 reason=reason if reason else "no reason",
                 date_unban=time_with_shift(duration_days),
@@ -71,7 +71,7 @@ class BanRepo(RepositoryObj):
                 white=white,
             ), commit=commit)
         except IntegrityError:
-            return False
+            return None
 
     async def delete_by_ip(self, ip_address: str, commit: bool = False) -> bool:
         """
