@@ -24,10 +24,12 @@ from src.routers.v1 import bans_router_v1, utils_router_v1
 from src.settings import settings
 
 
+# Создание единственного экземпляра Redis
 redis_c = redis.ConnectionPool.from_url(settings.REDIS_URL, decode_responses=True)
 
 
 async def auto_update():
+    """Автоматическое обновление раз в день"""
     logging.info('> Daily auto update')
     async with new_session() as session:
         db = DataBase(session)

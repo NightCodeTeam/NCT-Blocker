@@ -1,4 +1,3 @@
-from typing import Tuple, List
 from datetime import datetime
 from pydantic import BaseModel
 
@@ -18,7 +17,11 @@ class Ban(BaseModel):
 
 
 class Bans(BaseModel):
-    bans: Tuple[Ban] | List[Ban]
+    """
+    Модель списка банов и белых адресов:
+        - bans - список банов или белых адресов
+    """
+    bans: list[Ban]
 
 
 class NewBan(BaseModel):

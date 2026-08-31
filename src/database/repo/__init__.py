@@ -5,6 +5,11 @@ from .times import BanTimeRepo
 
 
 class DataBase(DataBaseRepo):
+    """
+    Единый класс работы с базой:
+        - bans: BanRepo
+        - times: BanTimeRepo
+    """
     bans: BanRepo
     times: BanTimeRepo
 
