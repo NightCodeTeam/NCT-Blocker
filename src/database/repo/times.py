@@ -22,7 +22,7 @@ class BanTimeRepo(RepositoryObj):
         """
         return await self.get(filter_=BanTime.ip == ip_address)
 
-    async def increase(self, ip_address: str) -> None:
+    async def increase(self, ip_address: str) -> int:
         """
         Увеличивает счетчик блокировок для IP.
         """
@@ -30,8 +30,9 @@ class BanTimeRepo(RepositoryObj):
         if data:
             data.count += 1
             data.last_date = get_current_time().date()
-        else:
-            await self._add(BanTime(ip=ip_address))
+            return data.count
+        await self._add(BanTime(ip=ip_address))
+        return 1
 
     async def del_old_bans(self):
         """

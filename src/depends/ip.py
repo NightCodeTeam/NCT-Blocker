@@ -13,19 +13,19 @@ async def ip_correct(ip: str) -> str:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Invalid IP address'
         )
-    try:
-        for i in ip_s:
-            n = int(i)
-            if not 0 <= n <= 255:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail='Invalid IP address'
-                )
-    except ValueError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Invalid IP address'
-        )
+    #try:
+    #    for i in ip_s:
+    #        n = int(i)
+    #        if not 0 <= n <= 255:
+    #            raise HTTPException(
+    #                status_code=status.HTTP_400_BAD_REQUEST,
+    #                detail='Invalid IP address'
+    #            )
+    #except ValueError:
+    #    raise HTTPException(
+    #        status_code=status.HTTP_400_BAD_REQUEST,
+    #        detail='Invalid IP address'
+    #    )
     return ip
 
 

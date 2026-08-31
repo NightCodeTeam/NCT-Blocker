@@ -25,18 +25,6 @@ class BanRepo(RepositoryObj):
         """
         return await self._exists(filter_=and_(Ban.ip == ip_address, Ban.white == white))
 
-    @override
-    async def count(self, white: bool = False) -> int:
-        """
-        Возвращает количество банов/белых адресов.
-        """
-        try:
-            return (await self.session.execute(
-                select(func.count()).select_from(self.model).where(Ban.white == white))
-            ).scalar() or 0
-        except AttributeError:
-            raise SessionNotFound()
-
     async def by_ip(self, ip_address: str) -> Ban | None:
         """
         Возвращает модель Ban по IP или None если не найдено.
@@ -77,10 +65,7 @@ class BanRepo(RepositoryObj):
         """
         Удаляет модель Ban по IP.
         """
-        data = await self.by_ip(ip_address)
-        if data:
-            return await self.delete(obj=data, commit=commit)
-        return False
+        return await self._delete(filter_=Ban.ip == ip_address, commit=commit)
 
     async def pagination(self, skip: int | None = None, limit: int | None = None) -> tuple[Ban, ...]:
         """

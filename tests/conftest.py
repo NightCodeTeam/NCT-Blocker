@@ -62,8 +62,6 @@ async def test_redis_client(request: Request):
     yield RedisClientMock()
 
 
-
-
 @pytest.fixture(scope='module')
 async def test_client() -> AsyncGenerator[AsyncClient]:
     app.dependency_overrides[get_db] = get_test_db

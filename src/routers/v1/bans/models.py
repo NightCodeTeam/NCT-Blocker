@@ -24,14 +24,12 @@ class Bans(BaseModel):
 class NewBan(BaseModel):
     """
     Модель для создания нового бана или белого адреса:
-        - ip
         - reason - причина бана или записи в белый список
-        - duration_days - количество дней до снятия бана (по умолчанию 3)
+        - duration_days - количество дней до снятия бана (по умолчанию 1)
         - permanent - является ли бан вечным (по умолчанию False)
         - white - является ли запись в белый список (по умолчанию False)
     """
-    ip: str
     reason: str = 'no reason'
-    duration_days: int = 3
+    duration_days: int = 1
     permanent: bool = False
     white: bool = False

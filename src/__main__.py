@@ -30,7 +30,9 @@ redis_c = redis.ConnectionPool.from_url(settings.REDIS_URL, decode_responses=Tru
 async def auto_update():
     logging.info('> Daily auto update')
     async with new_session() as session:
-        await DataBase(session).bans.del_old_bans()
+        db = DataBase(session)
+        await db.bans.del_old_bans()
+        await db.times.del_old_bans()
 
 
 # ? Планеровщик
@@ -50,7 +52,7 @@ async def lifespan(app: FastAPI):
     scheduler = AsyncIOScheduler()
     scheduler.add_job(
         auto_update,
-        trigger=CronTrigger(hour=12, minute=00),  # Каждый день в 12:00 мск
+        trigger=CronTrigger(hour=0, minute=30),  # Каждый день в 00:30 мск
         timezone="UTC"
     )
     scheduler.start()
@@ -61,7 +63,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title='Blocklist Service',
     description='Is ip banned?',
-    version='0.0.2',
+    version='0.0.3',
     lifespan=lifespan,
 )
 
