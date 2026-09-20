@@ -36,3 +36,4 @@ class NewBan(BaseModel):
     duration_days: int = 1
     permanent: bool = False
     white: bool = False
+
